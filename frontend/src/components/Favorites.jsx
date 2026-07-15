@@ -8,6 +8,7 @@ const Favorites = () => {
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(state => state.favorites.items);
   const status = useAppSelector(state => state.favorites.status);
+  const error = useAppSelector(state => state.favorites.error);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
 
@@ -32,7 +33,7 @@ const Favorites = () => {
   };
 
   if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'failed') return <div>Failed to load favorites.</div>;
+  if (status === 'failed') return <div>{error || 'Failed to load favorites.'}</div>;
 
   return (
     <div>

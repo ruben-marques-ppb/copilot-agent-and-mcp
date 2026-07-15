@@ -64,7 +64,7 @@ describe('Book Favorites App', () => {
 
     cy.contains('button', 'Clear All Favorites').click();
     cy.get('@confirm').should('have.been.calledOnce');
-    cy.get('@confirm').should('have.been.calledWithMatch', 'clear all favorites');
+    cy.get('@confirm').should('have.been.calledWith', 'Are you sure you want to clear all favorites?');
     cy.contains('No favorite books yet.').should('exist');
   });
 });
