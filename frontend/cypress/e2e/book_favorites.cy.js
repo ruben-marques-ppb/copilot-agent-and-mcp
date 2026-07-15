@@ -47,4 +47,24 @@ describe('Book Favorites App', () => {
     cy.visit('http://localhost:5173/books');
     cy.url().should('eq', 'http://localhost:5173/');
   });
+
+  it('should clear all favorites after confirmation', () => {
+    cy.contains('Login').click();
+    cy.get('input[name="username"]').type(user.username);
+    cy.get('input[name="password"]').type(user.password);
+    cy.get('button#login').click();
+    cy.contains('Books').click();
+    cy.get('button').contains('Add to Favorites').first().click();
+    cy.get('a#favorites-link').click();
+    cy.contains('button', 'Clear All Favorites').should('exist');
+
+    cy.window().then((win) => {
+      cy.stub(win, 'confirm').returns(true).as('confirm');
+    });
+
+    cy.contains('button', 'Clear All Favorites').click();
+    cy.get('@confirm').should('have.been.calledOnce');
+    cy.get('@confirm').should('have.been.calledWithMatch', 'clear all favorites');
+    cy.contains('No favorite books yet.').should('exist');
+  });
 });

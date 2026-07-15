@@ -19,6 +19,13 @@ export const addFavorite = createAsyncThunk('favorites/addFavorite', async ({ to
   return bookId;
 });
 
+export const clearFavorites = createAsyncThunk('favorites/clearFavorites', async (token) => {
+  await fetch('http://localhost:4000/api/favorites', {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer ' + token },
+  });
+});
+
 const favoritesSlice = createSlice({
   name: 'favorites',
   initialState: { items: [], status: 'idle' },
@@ -31,8 +38,11 @@ const favoritesSlice = createSlice({
         state.items = action.payload;
       })
       .addCase(fetchFavorites.rejected, state => { state.status = 'failed'; })
-      .addCase(addFavorite.fulfilled, (state, action) => {
+      .addCase(addFavorite.fulfilled, () => {
         // After adding, fetch the updated favorites list to ensure UI is in sync
+      })
+      .addCase(clearFavorites.fulfilled, state => {
+        state.items = [];
       });
   },
 });
