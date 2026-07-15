@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites } from '../store/favoritesSlice';
+import { fetchFavorites, clearAllFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/Favorites.module.css';
 
 const Favorites = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,11 @@ const Favorites = () => {
     }
     dispatch(fetchFavorites(token));
   }, [dispatch, token, navigate]);
+
+  const handleClearAll = () => {
+    if (!window.confirm('Are you sure you want to remove all favorites?')) return;
+    dispatch(clearAllFavorites(token));
+  };
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'failed') return <div>Failed to load favorites.</div>;
@@ -41,13 +47,18 @@ const Favorites = () => {
           </p>
         </div>
       ) : (
-        <ul>
-          {favorites.map(book => (
-            <li key={book.id}>
-              <strong>{book.title}</strong> by {book.author}
-            </li>
-          ))}
-        </ul>
+        <>
+          <button className={styles.clearAllBtn} onClick={handleClearAll}>
+            Clear All Favorites
+          </button>
+          <ul>
+            {favorites.map(book => (
+              <li key={book.id}>
+                <strong>{book.title}</strong> by {book.author}
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
