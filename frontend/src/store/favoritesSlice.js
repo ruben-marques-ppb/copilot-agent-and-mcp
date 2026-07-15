@@ -20,10 +20,11 @@ export const addFavorite = createAsyncThunk('favorites/addFavorite', async ({ to
 });
 
 export const clearAllFavorites = createAsyncThunk('favorites/clearAllFavorites', async (token) => {
-  await fetch('http://localhost:4000/api/favorites', {
+  const res = await fetch('http://localhost:4000/api/favorites', {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (!res.ok) throw new Error('Failed to clear favorites');
 });
 
 const favoritesSlice = createSlice({

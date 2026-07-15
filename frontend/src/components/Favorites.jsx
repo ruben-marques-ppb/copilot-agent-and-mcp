@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchFavorites, clearAllFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ const Favorites = () => {
   const status = useAppSelector(state => state.favorites.status);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
+  const [clearError, setClearError] = useState('');
 
   useEffect(() => {
     if (!token) {
@@ -19,9 +20,13 @@ const Favorites = () => {
     dispatch(fetchFavorites(token));
   }, [dispatch, token, navigate]);
 
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     if (!window.confirm('Are you sure you want to remove all favorites?')) return;
-    dispatch(clearAllFavorites(token));
+    setClearError('');
+    const result = await dispatch(clearAllFavorites(token));
+    if (clearAllFavorites.rejected.match(result)) {
+      setClearError('Failed to clear favorites. Please try again.');
+    }
   };
 
   if (status === 'loading') return <div>Loading...</div>;
@@ -30,6 +35,7 @@ const Favorites = () => {
   return (
     <div>
       <h2>My Favorite Books</h2>
+      {clearError && <p style={{ color: '#e25555' }}>{clearError}</p>}
       {favorites.length === 0 ? (
         <div style={{
           background: '#fff',
