@@ -35,7 +35,7 @@ const Favorites = () => {
   return (
     <div>
       <h2>My Favorite Books</h2>
-      {clearError && <p style={{ color: '#e25555' }}>{clearError}</p>}
+      {clearError && <p className={styles.errorMessage}>{clearError}</p>}
       {favorites.length === 0 ? (
         <div style={{
           background: '#fff',

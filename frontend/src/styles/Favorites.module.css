@@ -13,3 +13,8 @@
 .clearAllBtn:hover {
   background: #c43c3c;
 }
+
+.errorMessage {
+  color: #e25555;
+  margin-bottom: 0.5rem;
+}
