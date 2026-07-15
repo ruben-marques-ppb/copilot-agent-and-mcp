@@ -1,0 +1,20 @@
+.clearAllButton {
+  background: #b52b27;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: background 0.2s;
+}
+
+.clearAllButton:hover {
+  background: #8f1f1b;
+}
+
+.clearAllButton:focus-visible {
+  outline: 2px solid #1e90ff;
+  outline-offset: 2px;
+}

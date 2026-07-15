@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchFavorites } from '../store/favoritesSlice';
+import { clearFavorites, fetchFavorites } from '../store/favoritesSlice';
 import { useNavigate } from 'react-router-dom';
+import styles from '../styles/Favorites.module.css';
 
 const Favorites = () => {
   const dispatch = useAppDispatch();
   const favorites = useAppSelector(state => state.favorites.items);
   const status = useAppSelector(state => state.favorites.status);
+  const error = useAppSelector(state => state.favorites.error);
   const token = useAppSelector(state => state.user.token);
   const navigate = useNavigate();
 
@@ -18,12 +20,29 @@ const Favorites = () => {
     dispatch(fetchFavorites(token));
   }, [dispatch, token, navigate]);
 
+  const handleClearAllFavorites = async () => {
+    if (!token) {
+      navigate('/');
+      return;
+    }
+
+    const confirmed = window.confirm('Are you sure you want to clear all favorites?');
+    if (!confirmed) return;
+
+    await dispatch(clearFavorites(token));
+  };
+
   if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'failed') return <div>Failed to load favorites.</div>;
+  if (status === 'failed') return <div>{error || 'Failed to load favorites.'}</div>;
 
   return (
     <div>
       <h2>My Favorite Books</h2>
+      {favorites.length > 0 && (
+        <button className={styles.clearAllButton} onClick={handleClearAllFavorites}>
+          Clear All Favorites
+        </button>
+      )}
       {favorites.length === 0 ? (
         <div style={{
           background: '#fff',
